@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Articles</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 10px;
+    }
+
+    .card-price {
+      font-size: 18px;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+
+    .btn-delete {
+  padding: 10px 15px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-delete:hover {
+  background: #b52a36;
+}
+
+  </style>
+
+</head>
+<body>
+
+  <h1>All Articles</h1>
+
+  <div class="grid">
+    <% for(let art of allArticles) { %>
+      <div class="card">
+        <div class="card-title"><%= art.title %></div>
+
+        <div class="card-price">
+          <%= art.price %> DH
+        </div>
+
+        <div class="card-desc">
+          <%= art.description %>
+        </div>
+
+        <a href="#" class="btn">View More</a>
+      </div>
+
+      
+      <!-- DELETE BUTTON -->
+      <form action="/delete/<%= art._id %>" method="POST" style="margin-top:10px;">
+        <button class="btn-delete" onclick="return confirm('Delete this article?')">
+          Delete
+        </button>
+      </form>
+    <% } %>
+  </div>
+
+</body>
+</html>

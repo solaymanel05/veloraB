@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini Store — One Page</title>
+  <style>
+    :root{
+      --accent:#6c63ff;
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071025 0%, #071226 60%);color:#e6eef6}
+
+    /* layout */
+    .container{max-width:1100px;margin:36px auto;padding:28px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#3aa0ff);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{font-size:18px;margin:0}
+    .search{flex:1;margin-left:18px}
+    .search input{width:100%;padding:12px 14px;border-radius:12px;border:0;background:var(--glass);color:inherit;outline:2px solid transparent}
+
+    /* hero */
+    .hero{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:28px}
+    .promo{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:22px;border-radius:18px}
+    .promo h2{margin:0 0 6px 0}
+    .promo p{margin:0;color:var(--muted)}
+    .cta{margin-top:12px}
+    .btn{background:var(--accent);border:0;padding:10px 14px;border-radius:10px;color:#fff;font-weight:600;cursor:pointer}
+
+    .summary{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:18px;border-radius:12px}
+    .cart-count{display:inline-block;background:#ff6b6b;color:#111;padding:6px 9px;border-radius:999px;margin-left:8px;font-weight:700}
+
+    /* products */
+    .toolbar{display:flex;gap:12px;align-items:center;margin:18px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:16px;position:relative;overflow:hidden}
+    .thumb{height:140px;border-radius:12px;display:flex;align-items:flex-end;padding:12px;color:#fff;font-weight:700}
+    .title{margin:10px 0 6px 0;font-size:15px}
+    .price{font-weight:700}
+    .meta{color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px;margin-top:12px}
+    .add{flex:1;padding:8px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#3aa0ff);color:white;cursor:pointer}
+    .fav{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:10px;cursor:pointer}
+
+    /* cart drawer */
+    .drawer{position:fixed;right:20px;bottom:20px;width:320px;background:rgba(6,10,18,0.9);box-shadow:0 12px 40px rgba(2,6,23,0.6);border-radius:16px;padding:14px;transform:translateY(18px);transition:transform .28s ease,opacity .28s ease;opacity:0}
+    .drawer.open{transform:translateY(0);opacity:1}
+    .drawer h3{margin:0 0 6px 0}
+    .cart-items{max-height:260px;overflow:auto;margin-top:8px}
+    .cart-row{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px}
+    .cart-row .thumb-sm{width:56px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .cart-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+
+    /* small screens */
+    @media (max-width:760px){
+      .hero{grid-template-columns:1fr}
+      .container{padding:16px;margin:16px}
+    }
+
+    /* helper gradients for placeholders */
+    .g1{background:linear-gradient(135deg,#ff8a65,#ff5252)}
+    .g2{background:linear-gradient(135deg,#ffd54f,#ffb74d)}
+    .g3{background:linear-gradient(135deg,#81c784,#66bb6a)}
+    .g4{background:linear-gradient(135deg,#64b5f6,#42a5f5)}
+    .g5{background:linear-gradient(135deg,#b39ddb,#9575cd)}
+
+    /* subtle focus */
+    input:focus,button:focus{outline:2px solid rgba(108,99,255,0.18)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div ><img src="assets/img/logo.png"/></div>
+        <div>
+          <h1><%= name %> Store</h1>
+          <% if (name == "velora") { %>
+           <h1>fffffffffffffffffff</h1>
+          <% } %>
+          <div style="font-size:12px;color:var(--muted)">Good products • Fair prices</div>
+        </div>
+      </div>
+
+      <div class="search" style="max-width:560px">
+        <input id="q" placeholder="Search products, e.g. 'shoes'" />
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px">
+        <button id="openCart" class="btn">Cart <span id="count" class="cart-count">0</span></button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="promo">
+        <h2><%= name %></h2>
+        <p>Hand-picked essentials — designed to be useful, affordable and built to last.</p>
+        <div class="cta">
+          <button class="btn" onclick="document.getElementById('q').focus()">Start shopping</button>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:12px">
+          <div class="summary">
+            <div style="font-size:13px;color:var(--muted)">Free shipping</div>
+            <div style="font-weight:700">On orders over $50</div>
+          </div>
+
+          <div class="summary">
+            <div style="font-size:13px;color:var(--muted)">30-day returns</div>
+            <div style="font-weight:700">No questions asked</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="summary">
+        <h3 style="margin:0">Your cart</h3>
+        <div style="font-size:13px;color:var(--muted);margin-top:6px">Items you add will appear here. Click "Cart" to open drawer.</div>
+      </aside>
+    </section>
+
+    <div class="toolbar">
+      <div style="font-size:13px;color:var(--muted)">Showing <span id="shown">0</span> products</div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <select id="sort" style="padding:8px;border-radius:10px;background:var(--glass);border:0;color:inherit">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+        </select>
+      </div>
+    </div>
+
+    <main>
+      <div id="products" class="grid"></div>
+    </main>
+
+  </div>
+
+  <!-- cart drawer -->
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <h3>Your cart</h3>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div style="color:var(--muted)">Total</div>
+      <div id="total" style="font-weight:800">$0.00</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button id="checkout" class="btn" style="flex:1">Checkout</button>
+      <button id="closeDrawer" class="fav">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Minimal sample data
+    const PRODUCTS = [
+      {id:1,name:'Comfy Sneakers',price:49.99,desc:'Lightweight and breathable',tag:'shoes',g:'g1'},
+      {id:2,name:'Classic Tee',price:19.99,desc:'Soft cotton tee',tag:'clothing',g:'g2'},
+      {id:3,name:'Everyday Hoodie',price:39.99,desc:'Cozy midweight',tag:'clothing',g:'g3'},
+      {id:4,name:'Traveler Backpack',price:69.00,desc:'Organized and sleek',tag:'bags',g:'g4'},
+      {id:5,name:'Wireless Earbuds',price:79.99,desc:'Clear sound, long battery',tag:'electronics',g:'g5'},
+      {id:6,name:'Running Shorts',price:24.50,desc:'Quick-dry fabric',tag:'clothing',g:'g2'},
+      {id:7,name:'Water Bottle 750ml',price:14.00,desc:'Insulated stainless steel',tag:'home',g:'g3'},
+      {id:8,name:'Minimal Wallet',price:29.00,desc:'Slim leather',tag:'accessories',g:'g1'},
+    ];
+
+    const state = { cart: {}, products: PRODUCTS.slice() };
+
+    const productsEl = document.getElementById('products');
+    const shownEl = document.getElementById('shown');
+    const qEl = document.getElementById('q');
+    const sortEl = document.getElementById('sort');
+    const countEl = document.getElementById('count');
+    const drawer = document.getElementById('drawer');
+    const cartItemsEl = document.getElementById('cartItems');
+    const totalEl = document.getElementById('total');
+
+    function renderProducts(list){
+      productsEl.innerHTML = '';
+      list.forEach(p => {
+        const c = document.createElement('article');
+        c.className = 'card';
+        c.innerHTML = `
+          <div class="thumb ${p.g}" style="background-size:cover">${p.name.split(' ')[0]}</div>
+          <div class="title">${p.name}</div>
+          <div class="meta">${p.desc}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+            <div class="price">$${p.price.toFixed(2)}</div>
+            <div style="display:flex;gap:8px">
+              <button class="fav" onclick="toggleFav(${p.id})">♡</button>
+              <button class="add" onclick="addToCart(${p.id})">Add</button>
+            </div>
+          </div>
+        `;
+        productsEl.appendChild(c);
+      });
+      shownEl.textContent = list.length;
+    }
+
+    function toggleFav(id){
+      alert('Added to wishlist — demo only');
+    }
+
+    function addToCart(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return;
+      state.cart[id] = (state.cart[id]||0) + 1;
+      updateCartUI();
+    }
+
+    function updateCartUI(){
+      const ids = Object.keys(state.cart);
+      countEl.textContent = ids.reduce((s,i)=>s+state.cart[i],0);
+      cartItemsEl.innerHTML = '';
+      let total = 0;
+      ids.forEach(id => {
+        const qty = state.cart[id];
+        const p = PRODUCTS.find(x=>x.id==id);
+        total += p.price * qty;
+        const row = document.createElement('div');
+        row.className = 'cart-row';
+        row.innerHTML = `
+          <div class="thumb-sm ${p.g}">${p.name.split(' ')[0]}</div>
+          <div style="flex:1">
+            <div style="font-weight:700">${p.name}</div>
+            <div style="font-size:13px;color:var(--muted)">$${p.price.toFixed(2)} × ${qty}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button onclick="changeQty(${id},1)" class="fav">+</button>
+            <button onclick="changeQty(${id},-1)" class="fav">−</button>
+          </div>
+        `;
+        cartItemsEl.appendChild(row);
+      });
+      totalEl.textContent = `$${total.toFixed(2)}`;
+    }
+
+    function changeQty(id,delta){
+      if(!state.cart[id]) return;
+      state.cart[id] += delta;
+      if(state.cart[id] <= 0) delete state.cart[id];
+      updateCartUI();
+    }
+
+    // Search + sort
+    qEl.addEventListener('input',()=>applyFilters());
+    sortEl.addEventListener('change',()=>applyFilters());
+
+    function applyFilters(){
+      const q = qEl.value.trim().toLowerCase();
+      const s = sortEl.value;
+      let list = PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.tag.toLowerCase().includes(q));
+      if(s==='price-asc') list.sort((a,b)=>a.price-b.price);
+      if(s==='price-desc') list.sort((a,b)=>b.price-a.price);
+      renderProducts(list);
+    }
+
+    // Drawer controls
+    document.getElementById('openCart').addEventListener('click',()=>{
+      drawer.classList.toggle('open');
+    });
+    document.getElementById('closeDrawer').addEventListener('click',()=>{
+      drawer.classList.remove('open');
+    });
+    document.getElementById('checkout').addEventListener('click',()=>{
+      if(Object.keys(state.cart).length===0){alert('Your cart is empty');return}
+      alert('Checkout demo — thank you!');
+      state.cart = {};
+      updateCartUI();
+      drawer.classList.remove('open');
+    });
+
+    // init
+    applyFilters();
+    updateCartUI();
+
+  </script>
+</body>
+</html>
